@@ -24,11 +24,9 @@ class test_basemodel(unittest.TestCase):
     def tearDown(self):
         try:
             os.remove('file.json')
-        except:
-            pass
-
-    def test_default(self):
-        """ """
+        except Exception:
+            test_default(self):
+                """ """
         i = self.value()
         self.assertEqual(type(i), self.value)
 
