@@ -12,8 +12,9 @@ from models.user import User
 from models.place import Place
 
 
-classes = {'State':State, 'User': User, 'City':City, 
-            'Amenity':Amenity, 'Place':Place, 'Review':Review}
+classes = {'State': State, 'User': User, 'City': City,
+           'Amenity': Amenity, 'Place': Place, 'Review': Review}
+
 
 class DBStorage:
     __engine = None
@@ -21,7 +22,7 @@ class DBStorage:
 
     def __init__(self):
         """ Creates an instance of DBStorage """
-        
+
         HBNB_MYSQL_USER = getenv('HBNB_MYSQL_USER')
         HBNB_MYSQL_PWD = getenv('HBNB_MYSQL_PWD')
         HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
@@ -29,13 +30,13 @@ class DBStorage:
         HBNB_ENV = getenv('HBNB_ENV')
 
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
-                                            HBNB_MYSQL_USER,
-                                            HBNB_MYSQL_PWD,
-                                            HBNB_MYSQL_HOST,
-                                            HBNB_MYSQL_DB),
-                                            pool_pre_ping=True)
-    #if HBNB_ENV == 'test':
-        #Base.metadata.drop_all(self.__engine)
+            HBNB_MYSQL_USER,
+            HBNB_MYSQL_PWD,
+            HBNB_MYSQL_HOST,
+            HBNB_MYSQL_DB),
+            pool_pre_ping=True)
+    # if HBNB_ENV == 'test':
+        # Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ query on the current database session all objs
@@ -48,15 +49,15 @@ class DBStorage:
             cls_dict = {}
             for obj in self.__session.query(cls).all():
                 key = f"{cls}.{obj.id}"
-                cls_dict.update({key:obj})
+                cls_dict.update({key: obj})
         else:
             cls_dict = {}
             for clas in classes.values():
                 for obj in self.__session.query(clas).all():
                     key = f"{cls}.{obj.id}"
-                    cls_dict.update({key:obj})
+                    cls_dict.update({key: obj})
         return cls_dict
-                
+
     def new(self, obj):
         """ Add the object to the current database session """
         self.__session.add(obj)
@@ -75,5 +76,6 @@ class DBStorage:
         """ Creates all tables in the database """
 
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+            bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(session_factory)()

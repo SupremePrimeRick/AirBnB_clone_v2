@@ -11,7 +11,7 @@ Base = declarative_base()
 
 class BaseModel:
     """A base class for all hbnb models
-    
+
     Args:
         id (sqlalchemy string): unique id of basemodel
         created_at (sqlalchemy string): Time model was created
@@ -19,12 +19,12 @@ class BaseModel:
     """
 
     id = Column(String(60), primary_key=True)
-    created_at = Column(DateTime, 
-                        nullable=False, 
+    created_at = Column(DateTime,
+                        nullable=False,
                         default=datetime.utcnow())
 
-    updated_at = Column(DateTime, 
-                        nullable=False, 
+    updated_at = Column(DateTime,
+                        nullable=False,
                         default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
@@ -40,7 +40,7 @@ class BaseModel:
                     setattr(self, k, datetime.fromisoformat(kwargs[k]))
                 elif k != '__class__':
                     setattr(self, k, kwargs[k])
-                
+
     def __str__(self):
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
@@ -61,7 +61,7 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
-        
+
         if '_sa_instance_state' in dictionary.keys():
             del dictionary['_sa_instance_state']
         return dictionary
@@ -70,4 +70,3 @@ class BaseModel:
         """ Deletes current instance from storage """
         from models import storage
         storage.delete(self)
-        
