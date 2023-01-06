@@ -5,6 +5,7 @@ from sqlalchemy import Column, String, ForeignKey
 from models.state import State
 from models import storage_type
 from sqlalchemy.orm import relationship
+from models.place import Place
 
 
 class City(BaseModel, Base):
@@ -16,5 +17,6 @@ class City(BaseModel, Base):
         String(60),
         ForeignKey('states.id'),
         nullable=False)
-    # places = relationship('Place',
-    # backref='cities', cascade='all, delete-orphan')
+    places = relationship('Place',
+                          backref='cities',
+                          cascade='all, delete-orphan')
