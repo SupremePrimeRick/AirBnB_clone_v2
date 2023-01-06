@@ -131,7 +131,10 @@ class HBNBCommand(cmd.Cmd):
             if value.isnumeric():
                 value = int(value)
             elif '.' in value:
-                value = float(value)
+                try:
+                    value = float(value)
+                except Exception:
+                    value = value
             update_dict[key] = value
 
         if not args[0]:
