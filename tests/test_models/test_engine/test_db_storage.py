@@ -35,7 +35,7 @@ class TestDBStorage(unittest.TestCase):
         cur.execute('SELECT COUNT(*) FROM states')
         new_count = cur.fetchall()
 
-        self.assertEqual(new_count[0][0], old_count[0][0] + 2)
+        self.assertEqual(new_count[0][0], old_count[0][0] + 1)
         cur.close()
         db.close()
        
