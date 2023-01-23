@@ -10,21 +10,21 @@ from models.user import User
 # creation of a State
 state = State(name="California")
 state.save()
-
+print('1'*10)
 # creation of a City
 city = City(state_id=state.id, name="San Francisco")
 city.save()
-
+print('2'*10)
 # creation of a User
 user = User(email="john@snow.com", password="johnpwd")
 user.save()
-
+print('3'*10)
 # creation of 2 Places
 place_1 = Place(user_id=user.id, city_id=city.id, name="House 1")
 place_1.save()
 place_2 = Place(user_id=user.id, city_id=city.id, name="House 2")
 place_2.save()
-
+print('4'*10)
 # creation of 3 various Amenity
 amenity_1 = Amenity(name="Wifi")
 amenity_1.save()

@@ -12,23 +12,24 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Table
 
 
-if storage_type == 'db':
-    metadata = Base.metadata
-    place_amenity = Table('place_amenity', metadata,
-                          Column('place_id',
-                                 String(60),
-                                 ForeignKey('places.id'),
-                                 nullable=False,
-                                 primary_key=True),
-                          Column('amenity_id',
-                                 String(60),
-                                 ForeignKey('amenities.id'),
-                                 nullable=False,
-                                 primary_key=True))
+metadata = Base.metadata
+place_amenity = Table('place_amenity', metadata,
+                      Column('place_id',
+                             String(60),
+                             ForeignKey('places.id'),
+                             nullable=False,
+                             primary_key=True),
+                      Column('amenity_id',
+                             String(60),
+                             ForeignKey('amenities.id'),
+                             nullable=False,
+                             primary_key=True))
 
-    class Place(BaseModel, Base):
-        """ A place to stay """
-        __tablename__ = 'places'
+
+class Place(BaseModel, Base):
+    """ A place to stay """
+    __tablename__ = 'places'
+    if storage_type == 'db':
         city_id = Column(String(60),
                          ForeignKey('cities.id'),
                          nullable=False)
@@ -57,49 +58,49 @@ if storage_type == 'db':
                                  secondary=place_amenity,
                                  viewonly=False,
                                  backref='place_amenities')
-else:
-    city_id = ''
-    user_id = ''
-    name = ''
-    description = ''
-    number_rooms = 0
-    number_bathrooms = 0
-    max_guest = 0
-    price_by_night = 0
-    latitude = 0.0
-    longitude = 0.0
-    amenity_ids = []
+    else:
+        city_id = ''
+        user_id = ''
+        name = ''
+        description = ''
+        number_rooms = 0
+        number_bathrooms = 0
+        max_guest = 0
+        price_by_night = 0
+        latitude = 0.0
+        longitude = 0.0
+        amenity_ids = []
 
-    @property
-    def reviews(self):
-        """"""
-        from models import storage
-        revs = storage.all(Review)
-        reviews = []
-        for rev in revs.values():
-            if self.id == rev.place_id:
-                reviews.append(rev)
-        return reviews
+        @property
+        def reviews(self):
+            """"""
+            from models import storage
+            revs = storage.all(Review)
+            reviews = []
+            for rev in revs.values():
+                if self.id == rev.place_id:
+                    reviews.append(rev)
+            return reviews
 
-    @property
-    def amenities(self):
-        """Returns a list of amenity instances based on
-        the attribute amenity_ids that contains all
-        Amenity.id linked to the Place"""
-        from models import storage
-        filtered_amenities = []
-        all_amen = storage.all(Amenity)
-        for amenity in all_amen.values():
-            if ameneity.id in self.amenity_ids:
-                filtered_amenities.append(amenity)
-        return filtered_amenities
+        @property
+        def amenities(self):
+            """Returns a list of amenity instances based on
+            the attribute amenity_ids that contains all
+            Amenity.id linked to the Place"""
+            from models import storage
+            filtered_amenities = []
+            all_amen = storage.all(Amenity)
+            for amenity in all_amen.values():
+                if ameneity.id in self.amenity_ids:
+                    filtered_amenities.append(amenity)
+            return filtered_amenities
 
-    @amenities.setter
-    def amenities(self, obj):
-        """Append method that handles adding Amenity.id
-        to the attribute amenity_ids. Accepts only Amenity
-        object, otherwise do nothing"""
-        if obj:
-            if isinstance(obj, Amenity):
-                if obj.id not in self.amenity_ids:
-                    self.amenity_ids.append(obj.id)
+        @amenities.setter
+        def amenities(self, obj):
+            """Append method that handles adding Amenity.id
+            to the attribute amenity_ids. Accepts only Amenity
+            object, otherwise do nothing"""
+            if obj:
+                if isinstance(obj, Amenity):
+                    if obj.id not in self.amenity_ids:
+                        self.amenity_ids.append(obj.id)
