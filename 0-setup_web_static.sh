@@ -40,7 +40,7 @@ sudo chown -Rh ubuntu:ubuntu /data/
 CONFIG_FILE='/etc/nginx/sites-available/default'
 LINE_NO=$(wc -l $CONFIG_FILE | cut -d ' ' -f1)
 
-sudo sed -i "$LINE_NO i\\\tlocation /hbtn_static/ {\n\t\talias /data/web_static/current;\n\t}\n" $CONFIG_FILE
+sudo sed -i "$LINE_NO i\\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n" $CONFIG_FILE
 sudo ln -sf "/etc/nginx/sites-available/default" "/etc/nginx/sites-enabled/default"
 echo -e "\e[1;32m Nginx configuration updated\e[0m"
 

@@ -7,3 +7,6 @@ def prepare_webservers():
     put('0-setup_web_static.sh')
     sudo('chmod +x 0-setup_web_static.sh')
     sudo('./0-setup_web_static.sh')
+
+def load_index():
+    run('curl localhost/hbnb_static/index.html')
