@@ -10,11 +10,11 @@ sudo apt-get -y install ufw
 echo -e "\e[1;32m Package update and installation complete\e[0m"
 
 # Configure firewall to allow NGINX HTTP
-sudo ufw allow 'NGINX FULL'
+sudo ufw allow 'Nginx HTTP'
 echo -e "\e[1;32m Firewall access granted to nginx\e[0m"
 
 # Creating folders
-mkdir -p /data/web_static/releases/test /data/web_static/shared
+sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
 echo -e "\e[1;32m Directories created\e[0m"
 
 # Adding test string to index.html
@@ -25,7 +25,7 @@ echo -e "\e[1;32m Test string added to index.html\e[0m"
 if [ -d '/data/web_static/current' ];
 then
     echo 'Path /data/web_static/current already exists'
-    rm -rf /data/web_static/current
+    sudo rm -rf /data/web_static/current
     echo -e "\e[1;32m Existing symbolic link deleted\e[0m"
 fi
 
@@ -40,7 +40,7 @@ sudo chown -Rh ubuntu:ubuntu /data/
 CONFIG_FILE='/etc/nginx/sites-available/default'
 LINE_NO=$(wc -l $CONFIG_FILE | cut -d ' ' -f1)
 
-sed -i "$LINE_NO i\\\tlocation /hbtn_static/ {\n\t\t\talias /data/web_static/current;\n\t\t\t}\n" $CONFIG_FILE
+sudo sed -i "$LINE_NO i\\\tlocation /hbtn_static/ {\n\t\talias /data/web_static/current;\n\t}\n" $CONFIG_FILE
 sudo ln -sf "/etc/nginx/sites-available/default" "/etc/nginx/sites-enabled/default"
 echo -e "\e[1;32m Nginx configuration updated\e[0m"
 
