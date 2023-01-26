@@ -1,49 +1,48 @@
 #!/usr/bin/env bash
-# Script that sets up webserver for the deployment of web_static
+# sets up my web servers for the deployment of web_static
 
-echo -e "\e[1;32m Updating and installing packages...\e[0m"
+echo -e "\e[1;32m START\e[0m"
 
-# Updating and installing packages
-sudo apt-get -y update 
+#--Updating the packages
+sudo apt-get -y update
 sudo apt-get -y install nginx
-sudo apt-get -y install ufw
-echo -e "\e[1;32m Package update and installation complete\e[0m"
+echo -e "\e[1;32m Packages updated\e[0m"
+echo
 
-# Configure firewall to allow NGINX HTTP
+#--configure firewall
 sudo ufw allow 'Nginx HTTP'
-echo -e "\e[1;32m Firewall access granted to nginx\e[0m"
+echo -e "\e[1;32m Allow incomming NGINX HTTP connections\e[0m"
+echo
 
-# Creating folders
+#--created the dir
 sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
-echo -e "\e[1;32m Directories created\e[0m"
+echo -e "\e[1;32m directories created"
+echo
 
-# Adding test string to index.html
-echo "<h1>Welcome to sigmacodes</h1>" > /data/web_static/releases/test/index.html
-echo -e "\e[1;32m Test string added to index.html\e[0m"
+#--adds test string
+echo "<h1>Welcome to www.uniqueel.tech</h1>" > /data/web_static/releases/test/index.html
+echo -e "\e[1;32m Test string added\e[0m"
+echo
 
-# Checking if symbolic link already exists
-if [ -d '/data/web_static/current' ];
+#--prevent overwrite
+if [ -d "/data/web_static/current" ];
 then
-    echo 'Path /data/web_static/current already exists'
-    sudo rm -rf /data/web_static/current
-    echo -e "\e[1;32m Existing symbolic link deleted\e[0m"
-fi
+    echo "path /data/web_static/current exists"
+    sudo rm -rf /data/web_static/current;
+fi;
+echo -e "\e[1;32m prevent overwrite\e[0m"
+echo
 
-# Creating symbolic link
-sudo ln -s --force /data/web_static/releases/test/ /data/web_static/current
+#--create symbolic link
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+sudo chown -hR ubuntu:ubuntu /data
+
+sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' /etc/nginx/sites-available/default
+
+sudo ln -sf '/etc/nginx/sites-available/default' '/etc/nginx/sites-enabled/default'
 echo -e "\e[1;32m Symbolic link created\e[0m"
+echo
 
-# Change owner and group of /data/ recursively
-sudo chown -Rh ubuntu:ubuntu /data/
-
-# Get line number to insert line
-CONFIG_FILE='/etc/nginx/sites-available/default'
-LINE_NO=$(wc -l $CONFIG_FILE | cut -d ' ' -f1)
-
-sudo sed -i "$LINE_NO i\\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n" $CONFIG_FILE
-sudo ln -sf "/etc/nginx/sites-available/default" "/etc/nginx/sites-enabled/default"
-echo -e "\e[1;32m Nginx configuration updated\e[0m"
-
-# Restart nginx server
+#--restart NGINX
 sudo service nginx restart
-echo -e "\e[1;32m Nginx restarted OK\e[0m"
+echo -e "\e[1;32m restart NGINX\e[0m"
